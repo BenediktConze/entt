@@ -1431,7 +1431,7 @@ public:
 
         (std::copy(reg.raw<Component>(), reg.raw<Component>() + reg.size<Component>(), pool<Component>().raw()), ...);
         (std::for_each(reg.data<Component>(), reg.data<Component>() + reg.size<Component>(), [this](const auto entity) {
-            pools[component_family::type<Component>]->construct(entity);
+            pool<Component>().sparse_set<Entity>::construct(entity);
         }), ...);
 
         next = reg.next;
