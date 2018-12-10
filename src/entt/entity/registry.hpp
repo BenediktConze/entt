@@ -1430,8 +1430,8 @@ public:
         (reserve<Component>(reg.size<Component>()), ...);
 
         (std::copy(reg.raw<Component>(), reg.raw<Component>() + reg.size<Component>(), pool<Component>().raw()), ...);
-        (std::for_each(reg.data<Component>(), reg.data<Component>() + reg.size<Component>(), [this](const auto entity) {
-            pool<Component>().sparse_set<Entity>::construct(entity);
+        (std::for_each(reg.data<Component>(), reg.data<Component>() + reg.size<Component>(), [&cpool = pool<Component>()](const auto entity) {
+            cpool.sparse_set<Entity>::construct(entity);
         }), ...);
 
         next = reg.next;
