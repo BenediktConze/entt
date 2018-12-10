@@ -1430,9 +1430,12 @@ public:
         (reserve<Component>(reg.size<Component>()), ...);
 
         (std::copy(reg.raw<Component>(), reg.raw<Component>() + reg.size<Component>(), pool<Component>().raw()), ...);
-        (std::for_each(reg.data<Component>(), reg.data<Component>() + reg.size<Component>(), [&cpool = pool<Component>()](const auto entity) {
-            cpool.sparse_set<Entity>::construct(entity);
-        }), ...);
+        // double lambda function used to work around a bug of gcc7
+        (std::for_each(reg.data<Component>(), reg.data<Component>() + reg.size<Component>(), ([](auto *cpool) {
+            return [cpool](const auto entity) {
+                cpool->sparse_set<Entity>::construct(entity);
+            };
+        })(pools[component_family::type<Component>].get())), ...);
 
         next = reg.next;
         available = reg.available;
